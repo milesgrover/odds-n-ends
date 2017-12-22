@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>js test</title>
+
+        <style media="screen">
+            body {
+                font-family: sans-serif;
+            }
+            body > * + div {
+                margin-top: 20px;
+            }
+            input[type="number"] {
+                width: 3em;
+            }
+            #mathInput2 {
+                display: none;
+            }
+            #mathInput2.show {
+                display: inline-block;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <label for="mathType">math type:</label>
+            <select id="mathType">
+                <option>add7</option>
+                <option>multiply</option>
+            </select>
+            <input type="number" id="mathInput1" value="0" />
+            <input type="number" id="mathInput2" value="1" />
+            <button type="button" id="mathBtn">mathify</button>
+            <div id="mathAnswer"></div>
+        </div>
+        <div>
+            <form>
+                <label for="capitalizeInput">capitalize me:</label>
+                <input type="text" id="capitalizeInput" placeholder="capitalize this text" />
+                <button type="submit" id="capitalizeBtn">do it</button>
+                <div id="capitalizeOutput"></div>
+            </form>
+        </div>
+        <div>
+            <label for="lastLetterInput">what's the last letter?</label>
+            <input type="text" id="lastLetterInput" />
+            <button type="button" id="lastLetterBtn">I will tell you</button>
+            <div id="lastLetterOutput"></div>
+        </div>
+        <script>
+            // Get mathify elements
+            var mathType = document.getElementById('mathType');
+            var mathInput1 = document.getElementById('mathInput1');
+            var mathInput2 = document.getElementById('mathInput2');
+            var mathBtn = document.getElementById('mathBtn');
+            var mathAnswer = document.getElementById('mathAnswer');
+
+            var add7 = function(x) {
+                x = parseInt(x, 10);
+                return x + 7;
+            }
+
+            var multiply = function(x, y) {
+                x = parseInt(x, 10);
+                y = parseInt(y, 10);
+                return x * y;
+            }
+
+            mathType.addEventListener('change', function() {
+                if (mathType.value === 'multiply') {
+                    mathInput2.classList.add('show');
+                } else {
+                    mathInput2.classList.remove('show');
+                }
+            })
+
+            mathBtn.addEventListener('click', function() {
+                switch(mathType.value) {
+                    case 'add7':
+                        mathAnswer.textContent = `${mathInput1.value} + 7 = ${add7(mathInput1.value)}`;
+                        break;
+                    case 'multiply':
+                        mathAnswer.textContent = `${mathInput1.value} \u00D7 ${mathInput2.value} = ${multiply(mathInput1.value, mathInput2.value)}`;
+                        break;
+                    default:
+                        mathAnswer.textContent = 'Something went wrong.'
+                }
+            })
+
+            // Get capitalize elements
+            var capitalizeInput = document.getElementById('capitalizeInput');
+            var capitalizeBtn = document.getElementById('capitalizeBtn');
+            var capitalizeOutput = document.getElementById('capitalizeOutput');
+
+            var capitalize = function(string) {
+                var firstLetter = string.slice(0,1).toUpperCase();
+                var otherLetters = string.slice(1).toLowerCase();
+                return firstLetter + otherLetters;
+            }
+
+            capitalizeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+
+                if (capitalizeInput.value.length) {
+                    var capitalizedString = capitalize(capitalizeInput.value);
+                    capitalizeOutput.textContent = capitalizedString;
+                } else {
+                    capitalizeOutput.textContent = '';
+                }
+            });
+
+            // Get lastLetter elements
+            var lastLetterInput = document.getElementById('lastLetterInput');
+            var lastLetterBtn = document.getElementById('lastLetterBtn');
+            var lastLetterOutput = document.getElementById('lastLetterOutput');
+
+            var lastLetter = function(string) {
+                return string.charAt(string.length - 1);
+            }
+
+            lastLetterBtn.addEventListener('click', function() {
+                if (lastLetterInput.value.length) {
+                    lastLetterOutput.textContent = `The last letter is "${lastLetter(lastLetterInput.value)}"` ;
+                } else {
+                    lastLetterOutput.textContent = '';
+                }
+            });
+        </script>
+    </body>
+</html>

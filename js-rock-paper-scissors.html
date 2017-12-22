@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>js practice</title>
+
+        <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+        <style>
+            body {
+                font-family: 'Raleway', sans-serif;
+                font-size: 16px;
+            }
+
+            input[type="number"] {
+                font-family: 'Raleway', sans-serif;
+                font-size: 16px;
+                width: 3em;
+                margin-right: 4px;
+            }
+
+            * + button {
+                margin-top: 12px;
+            }
+        </style>
+    </head>
+    <body>
+        <div><input id="rounds-input" type="number" min="0" max="10" value="0" /> number of games</div>
+        <button onclick="game()">play rock paper scissors</button>
+        <h3 id="rps-results-heading"></h3>
+        <ol id="rps-list">
+        </ol>
+        <p id="final-result"></p>
+        <script>
+            var winCount = 0;
+
+            var roundsInput = document.getElementById('rounds-input');
+            var resultsList = document.getElementById('rps-list');
+            var finalResult = document.getElementById('final-result');
+            var resultsHeading = document.getElementById('rps-results-heading');
+
+            function computerPlay() {
+                var rochambeau = ['rock', 'paper', 'scissors'];
+                return rochambeau[Math.floor(Math.random() * rochambeau.length)];
+            }
+
+            function playRound(playerSelection, computerSelection) {
+                // case insensitive
+                playerSelection = playerSelection.toLowerCase();
+
+                // return right away if it was a tie
+                if (playerSelection == computerSelection) {
+                    return `Human: ${playerSelection}. Computer: ${computerSelection}. It's a tie.`
+                }
+
+                // by setting each option to a number, we can compare them using math instead of a bunch of conditionals
+                var numberize = {
+                    rock: 0,
+                    paper: 1,
+                    scissors: -1
+                }
+
+                var compare = numberize[playerSelection] - numberize[computerSelection];
+
+                // wins will amount to 1 or -2, losses will be -1 or 2
+                if (compare == 1 || compare == -2) {
+                    winCount++;
+                    return `Human: ${playerSelection}. Computer: ${computerSelection}. Human wins.`
+                } else {
+                    winCount--;
+                    return `Human: ${playerSelection}. Computer: ${computerSelection}. Human loses.`
+                }
+            }
+
+            function game() {
+                var rounds = roundsInput.value;
+
+                if (rounds < 1) {
+                    alert(`Well OK, I guess you have now played 0 games of rock paper scissors`);
+                    return;
+                }
+
+                // reset each time the button is clicked
+                winCount = 0;
+                resultsHeading.textContent = '';
+                resultsList.innerHTML = '';
+                finalResult.textContent = '';
+
+                for (var i = 0; i < rounds; i++) {
+                    var playerInput = prompt(`ROUND ${i + 1} of ${rounds}: Rock, paper, or scissors?`, '');
+
+                    // in case of bad input
+                    while (playerInput.toLowerCase() !== 'rock' && playerInput.toLowerCase() !== 'paper' && playerInput.toLowerCase() !== 'scissors') {
+                        playerInput = prompt(`ROUND ${i + 1} of ${rounds}: ${playerInput.toUpperCase()}?? You have to pick ROCK or PAPER or SCISSORS idiot`, '');
+                    }
+
+                    var newResult = document.createElement('li');
+                    newResult.textContent = playRound(playerInput, computerPlay());
+                    resultsList.appendChild(newResult);
+                }
+
+                // after all is said and done
+                if (winCount > 0) {
+                    finalResult.textContent = `Human won the overall thing`;
+                } else if (winCount < 0) {
+                    finalResult.textContent = `Computer won the overall thing`;
+                } else {
+                    finalResult.textContent = `Human and Computer tied the overall thing`;
+                }
+
+                resultsHeading.textContent = `results`;
+            }
+
+            // game();
+
+        </script>
+    </body>
+</html>
